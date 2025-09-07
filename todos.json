@@ -1,0 +1,13 @@
+[
+    {
+        "id" : 1 , "text" : "Learn Next js" , "completed" : false 
+    },
+
+    {
+        "id" : 2 , "text" : "Learn React js" , "completed" : false 
+    },
+    {
+        "id" : 3 , "text" : "Learn mongo js" , "completed" : false 
+    }
+]
+   
