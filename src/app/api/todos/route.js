@@ -1,8 +1,12 @@
 import { headers } from "next/headers"
-import todosData from "../../../../todos.json" 
+import todosData from "../../../../todos.json"
 import { writeFile } from "node:fs/promises"
+import db from "@/lib/connectDB"
+import { connectDB } from "@/lib/connectDB"
+import Todo from "@/model/TodoModel"
+import { cookies  } from "next/headers"
 
-export function GET( request ){
+export async function GET(request) {
     console.log("Running todo route")
     // return new Response(
     //     JSON.stringify(
@@ -15,21 +19,39 @@ export function GET( request ){
     //    }
     // )
 
-    console.log(request)
+    await connectDB()
 
-    return Response.json( todosData)
-}
+    // console.log(request.headers)
+    const cookieStore = await cookies() 
+    const allTodos = await Todo.find();
 
-export async function POST( request ){
-    const todo = await request.json() ;
-    const newtodo = todosData.push({
-        id : todosData.length + 1 ,
-        text : todo.text ,
-        completed : false 
+    console.log( cookieStore.getAll())
+
+    const response = new Response( JSON.stringify([]) , {
+        headers : {
+            "Set-Cookie" : "user=Abhay;path=/;httpOnly" 
+        }
     })
 
-    
-    todosData.push(newtodo)
-    await writeFile("todos.json" , JSON.stringify(todosData,null,2))
-    return Response.json(newtodo )
+    // return Response.json(
+    //     allTodos.map(({ id, text, completed }) => ({
+    //         id,
+    //         text,
+    //         completed
+    //     }))
+    // );
+
 }
+
+export async function POST(request) {
+
+    await connectDB()
+    const todo = await request.json();
+    const { id , text , complted } = await Todo.create({text:todo.text});
+    
+    return Response.json({ id , text , complted } , {
+        status : 200
+    })
+}
+
+
