@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server"
 import todosData from "../../../../../todos.json"
 import { writeFile } from "node:fs/promises";
+import userModel from "../../../../model/TodoModel";
+import { connectDB } from "@/lib/connectDB";
 
 export async function GET( _ , {params}){
     // const todo = todosData.find( (t) =>t.id === params.id )
 
+    connectDB()
     const todo = await params.id ;
     const { id } = await params
 
@@ -29,16 +32,10 @@ export async function PUT( request , {params}){
     const editTodoData = await request.json() ;
     const { id } = await params 
 
-    console.log(todo)
-    const todoIndex = todosData.findIndex( ( tdod ) => id == todo.id )
-    const todo = todoIndex[todoIndex]
-
-    const editedTodo = { ...todo , ...editTodoData }
+    const editedTodo = await Todo
 
     
-    todosData[todoIndex] = editTodoData ;
-    await writeFile("todos.json" , JSON.stringify(todosData,null,2))
-    return Response.json(newtodo )
+    
 }
 
 export async function DELETE( _ , {params}){
@@ -52,7 +49,7 @@ export async function DELETE( _ , {params}){
     todosData.splice( todoIndex , 1 )
 
     await writeFile("todos.json" , JSON.stringify(todosData , null , 2))
-    return Response.json( null , {
+    return new Response ( null , {
         status : 204,
     })
 }

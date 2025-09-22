@@ -25,7 +25,12 @@ export async function GET(request) {
     const cookieStore = await cookies() 
     const allTodos = await Todo.find();
 
-    console.log( cookieStore.getAll())
+    console.log( cookieStore.getAll('user'))
+
+    cookieStore.set("userId" , '12132' , {
+        httpOnly : true ,
+        maxAge : 2
+    })
 
     const response = new Response( JSON.stringify([]) , {
         headers : {

@@ -6,7 +6,7 @@ export async function POST(request) {
     await connectDB();
 
     const body = await request.json();
-
+    
     const newUser = await User.create(body);
 
     return Response.json(
@@ -27,7 +27,7 @@ export async function POST(request) {
         error: error.message,
       },
       {
-        status: 500, // internal server error
+        status: 409, // internal server error
       }
     );
   }
