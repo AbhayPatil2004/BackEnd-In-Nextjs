@@ -1,5 +1,7 @@
-  async function registerUser(FormData){
-        'use server'
-        console.log(FormData)
-        return { message : "Got the Data"}
-    }
+'use server'
+async function registerUser(FormData) {
+    console.log(FormData)
+    return { message: "Got the Data" }
+}
+
+export default registerUser

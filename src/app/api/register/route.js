@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/connectDB";
 import User from "@/model/userModel";  // capitalized model name for clarity
+import bcrypt from 'bcrypt'
 
 export async function POST(request) {
   try {
@@ -7,7 +8,9 @@ export async function POST(request) {
 
     const body = await request.json();
     
-    const newUser = await User.create(body);
+    const { name , email , password } = body ;
+    const hashedPassword = await bcrypt.hash(password,10);
+    const newUser = await User.create({ name , email , password : hashedPassword });
 
     return Response.json(
       {

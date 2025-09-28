@@ -5,6 +5,7 @@ import { createHmac } from "crypto"
 import session from "@/model/session";
 import { Session } from "inspector";
 // import session from "@/model/session";
+import bcrypt from 'bcrypt'
 
 export async function POST(request) {
 
@@ -16,7 +17,9 @@ export async function POST(request) {
     try {   
 
         const user = await user.findOne({email});
-        if( !user || user.password != password ){
+        const isPasswordValid = bcrypt.compare(password , user.password )
+
+        if( !user || !isPasswordValid ){
             return Response.json({
                 error : 'Invalid Credentials'
             },
